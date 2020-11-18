@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from os import environ
 from os.path import join
 from typing import Any, TypedDict, cast
 
@@ -123,5 +124,5 @@ if __name__ == '__main__':
     debug = True
     host = '0.0.0.0'
     app.run(
-        # host=host, debug=debug
+        host="0.0.0.0", port=int(environ.get("PORT", 5000)), debug=debug
     )
