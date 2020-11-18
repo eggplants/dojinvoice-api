@@ -25,8 +25,25 @@ class DojinvoiceDB(object):
         return set(datalist)
 
     def idlist_to_data_list(self, idlist: List[str]):
+        Work = self.tables.work
+        Genre = self.tables.genre
+        Illustrator = self.tables.illustrator
+        Musician = self.tables.musician
+        Option = self.tables.option
+        Scenario = self.tables.scenario
+        Voice = self.tables.voice
+        Writer = self.tables.writer
 
-        pass
+        return self.session.query(Work).\
+            filter(Work.work_id in idlist).\
+            filter(Work.work_id == Genre.work_id).\
+            filter(Work.work_id == Illustrator.work_id).\
+            filter(Work.work_id == Musician.work_id).\
+            filter(Work.work_id == Option.work_id).\
+            filter(Work.work_id == Scenario.work_id).\
+            filter(Work.work_id == Voice.work_id).\
+            filter(Work.work_id == Writer.work_id).\
+            all()
 
     def search(self, params):
         # 集合を取りidのリストを返す

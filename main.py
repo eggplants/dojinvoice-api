@@ -1,6 +1,7 @@
-from typing import Any, Dict, TypedDict, cast
+from typing import Any, TypedDict, cast
 
 from flask import Blueprint, Flask, jsonify, request
+from werkzeug.datastructures import ImmutableMultiDict
 
 from db import DojinvoiceDB
 
@@ -28,7 +29,7 @@ def res_ok(data: Any, status: int) -> Any:
     return jsonify({'data': data}), status
 
 
-def get_params(args):
+def get_params(args: ImmutableMultiDict[Any, Any]):
     params = cast(Params, {})
     params['offset'] = args.get('offset', default=20, type=int)
     params['random'] = args.get('random', default=True, type=bool)
@@ -36,12 +37,12 @@ def get_params(args):
     params['keyword'] = args.get('keyword', default='', type=str)
     params['category'] = args.get('category', default='', type=str)
     params['rate'] = args.get('rate', default=1, type=int)
-    params['genre'] = args.get('rate', default=1, type=int)
-    params['illustrator'] = args.get('rate', default=1, type=int)
-    params['musician'] = args.get('rate', default=1, type=int)
-    params['scenario'] = args.get('rate', default=1, type=int)
-    params['voice'] = args.get('rate', default=1, type=int)
-    params['writer'] = args.get('rate', default=1, type=int)
+    params['genre'] = args.get('genre', default=1, type=str)
+    params['illustrator'] = args.get('illustrator', default=1, type=str)
+    params['musician'] = args.get('musician', default=1, type=str)
+    params['scenario'] = args.get('scenario', default=1, type=str)
+    params['voice'] = args.get('voice', default=1, type=str)
+    params['writer'] = args.get('writer', default=1, type=str)
     return params
 
 
@@ -54,7 +55,7 @@ def index():
 
 @v1.route("/category_list")
 def category():
-    return jsonify({'data': DB.get_exist_chobit_list()}), 200
+    return jsonify({'data': DB.get_category_list()}), 200
 
 
 @v1.route("/chobit_list")
