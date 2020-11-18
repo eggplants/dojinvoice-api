@@ -127,8 +127,4 @@ def genre():
 
 if __name__ == '__main__':
     app.register_blueprint(v1, url_prefix='/v1')
-    debug = True
-    host = '0.0.0.0'
-    app.run(
-        host="0.0.0.0", port=int(environ.get("PORT", 5000)), debug=debug
-    )
+    app.run(host="0.0.0.0", port=int(environ.get("PORT", 5000)))

@@ -1,5 +1,6 @@
 __pycache__/
 .vscode/
+*_env/
 *.swp
 *.save
 *.pyc
