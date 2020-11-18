@@ -118,7 +118,11 @@ def genre():
     return res_ok(DB.get_genre_list(), 200)
 
 
-if __name__ == '__main__':
+def main():
     app.register_blueprint(v1, url_prefix='/v1')
     debug = True
     app.run(host='0.0.0.0', debug=debug)
+
+
+if __name__ == '__main__':
+    main()
