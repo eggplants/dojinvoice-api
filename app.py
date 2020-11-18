@@ -3,13 +3,12 @@ from os import environ
 from os.path import join
 from typing import Any, TypedDict, cast
 
-from flask import Blueprint, Flask, jsonify, send_from_directory
+from flask import Flask, jsonify, send_from_directory
 
 from db import DojinvoiceDB
 
 DB = DojinvoiceDB()
 app = Flask(__name__)
-v1 = Blueprint('version1', 'version1')
 
 
 class Params(TypedDict):
@@ -65,66 +64,60 @@ def favicon():
 
 @app.route('/')
 def index():
-    return res_ok(['/v1'], 200)
-
-
-@v1.route('/')
-def v1_index():
     return res_ok([str(_) for _ in app.url_map.iter_rules()], 200)
 
 
-# @v1.route('/search', methods=['GET'])
+# @app.route('/search', methods=['GET'])
 # def search():
 #     args = request.args
 #     params = get_params(args)
 #     return res_ok(DB.search(params), 200)
 
 
-@v1.route('/category')
+@app.route('/category')
 def category():
     return res_ok(DB.get_category_list(), 200)
 
 
-@v1.route('/rate')
+@app.route('/rate')
 def rate():
     return res_ok(DB.get_rate_filtered_list(1.0, 5.0), 200)
 
 
-@v1.route('/chobit')
+@app.route('/chobit')
 def chobit():
     return res_ok(DB.get_exist_chobit_list(), 200)
 
 
-@v1.route('/illustrator')
+@app.route('/illustrator')
 def illustrator():
     return res_ok(DB.get_illustrator_list(), 200)
 
 
-@v1.route('/musician')
+@app.route('/musician')
 def musician():
     return res_ok(DB.get_musician_list(), 200)
 
 
-@v1.route('/scenario')
+@app.route('/scenario')
 def scenario():
     return res_ok(DB.get_scenario_list(), 200)
 
 
-@v1.route('/voice')
+@app.route('/voice')
 def voice():
     return res_ok(DB.get_voice_list(), 200)
 
 
-@v1.route('/writer')
+@app.route('/writer')
 def writer():
     return res_ok(DB.get_writer_list(), 200)
 
 
-@v1.route('/genre')
+@app.route('/genre')
 def genre():
     return res_ok(DB.get_genre_list(), 200)
 
 
 if __name__ == '__main__':
-    app.register_blueprint(v1, url_prefix='/v1')
     app.run(host="0.0.0.0", port=int(environ.get("PORT", 5000)))
