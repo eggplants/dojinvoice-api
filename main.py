@@ -121,7 +121,10 @@ def genre():
 def main():
     app.register_blueprint(v1, url_prefix='/v1')
     debug = True
-    app.run(host='0.0.0.0', debug=debug)
+    host = '0.0.0.0'
+    app.run(
+        # host=host, debug=debug
+    )
 
 
 if __name__ == '__main__':
