@@ -59,11 +59,17 @@ def get_params(args) -> Params:
 
 @app.route('/favicon.ico')
 def favicon():
-    return send_from_directory(join(app.root_path, 'static/img'), 'favicon.ico')
+    return send_from_directory(join(app.root_path, 'static/img'),
+                               'favicon.ico')
+
+
+@app.route('/')
+def index():
+    return res_ok(['/v1'], 200)
 
 
 @v1.route('/')
-def index():
+def v1_index():
     return res_ok([str(_) for _ in app.url_map.iter_rules()], 200)
 
 
@@ -74,47 +80,47 @@ def index():
 #     return res_ok(DB.search(params), 200)
 
 
-@ v1.route('/category')
+@v1.route('/category')
 def category():
     return res_ok(DB.get_category_list(), 200)
 
 
-@ v1.route('/rate')
+@v1.route('/rate')
 def rate():
     return res_ok(DB.get_rate_filtered_list(1.0, 5.0), 200)
 
 
-@ v1.route('/chobit')
+@v1.route('/chobit')
 def chobit():
     return res_ok(DB.get_exist_chobit_list(), 200)
 
 
-@ v1.route('/illustrator')
+@v1.route('/illustrator')
 def illustrator():
     return res_ok(DB.get_illustrator_list(), 200)
 
 
-@ v1.route('/musician')
+@v1.route('/musician')
 def musician():
     return res_ok(DB.get_musician_list(), 200)
 
 
-@ v1.route('/scenario')
+@v1.route('/scenario')
 def scenario():
     return res_ok(DB.get_scenario_list(), 200)
 
 
-@ v1.route('/voice')
+@v1.route('/voice')
 def voice():
     return res_ok(DB.get_voice_list(), 200)
 
 
-@ v1.route('/writer')
+@v1.route('/writer')
 def writer():
     return res_ok(DB.get_writer_list(), 200)
 
 
-@ v1.route('/genre')
+@v1.route('/genre')
 def genre():
     return res_ok(DB.get_genre_list(), 200)
 
