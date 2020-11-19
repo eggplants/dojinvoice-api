@@ -14,9 +14,10 @@ class DojinvoiceDB(object):
         self.tables = Base.classes
 
     def get_exist_chobit_list(self) -> List[str]:
-        Option = self.tables.option
-        datalist = self.session.query(Option.work_id, Option.chobit_link).\
-            filter(Option.chobit_link is not None).all()
+        datalist = [{"id": _['work_id'], "chobit_link":_['chobit_link']}
+                    for _ in self.engine.execute(
+                        '''select work_id, chobit_link from option
+                        where chobit_link is not null''')]
         return datalist
 
     def get_category_list(self):
