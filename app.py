@@ -28,7 +28,10 @@ def favicon():
 
 @app.route('/')
 def index():
-    return res_ok(['v1'], 200)
+    rules = [str(_) for _ in app.url_map.iter_rules()]
+    return res_ok({
+        'v1_endpoints': [rule for rule in rules if 'v1' in rule]
+    }, 200)
 
 
 if __name__ == '__main__':
