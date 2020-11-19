@@ -1,5 +1,7 @@
 # chobit-endless-api
 
+[![Heroku](https://heroku-badge.herokuapp.com/?app=dojinvoice-api)]
+
 - API based on [dojinvoice_db](https://github.com/eggplants/dojinvoice_db)
 
 ## First
