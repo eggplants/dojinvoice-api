@@ -1,8 +1,21 @@
-from typing import List, Optional
+from typing import Any, List, Optional, TypedDict, cast
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
+
+
+class PagenatedListDict(TypedDict):
+    offset: int
+    index: int
+    data: List[Any]
+
+
+def pagenate(lis: List[Any], offset: int, idx: int) -> PagenatedListDict:
+    _ = cast(PagenatedListDict, {})
+    start = idx*offset
+    _['offset'], _['index'], _['data'] = offset, idx, lis[start:start + offset]
+    return _
 
 
 class DojinvoiceDB(object):
@@ -13,22 +26,25 @@ class DojinvoiceDB(object):
         Base.prepare(self.engine, reflect=True)
         self.tables = Base.classes
 
-    def get_exist_chobit_list(self) -> List[str]:
+    def get_exist_chobit_list(
+            self, offset: int, idx: int) -> PagenatedListDict:
         datalist = [{"id": _['work_id'], "chobit_link":_['chobit_link']}
                     for _ in self.engine.execute(
                         '''select work_id, chobit_link from option
                         where chobit_link is not null''')]
-        return datalist
+        return pagenate(datalist, offset, idx)
 
-    def get_category_list(self):
+    def get_category_list(self, offset: int, idx: int):
         Work = self.tables.work
         datalist = self.session.query(Work.category).all()
-        return [_[0] for _ in list(set(datalist))]
+        datalist = [_[0] for _ in list(set(datalist))]
+        return pagenate(datalist, offset, idx)
 
-    def get_genre_list(self):
+    def get_genre_list(self, offset: int, idx: int):
         Genre = self.tables.genre
         datalist = self.session.query(Genre.genre).all()
-        return [_[0] for _ in list(set(datalist))]
+        datalist = [_[0] for _ in list(set(datalist))]
+        return pagenate(datalist, offset, idx)
 
     def get_rate_filtered_list(self, min_rate: float, max_rate: float,
                                idlist: Optional[List[str]] = None):
@@ -38,30 +54,35 @@ class DojinvoiceDB(object):
             min=min_rate, max=max_rate)]
         return (set(idlist) | set(_) if idlist is not None else _)
 
-    def get_illustrator_list(self):
+    def get_illustrator_list(self, offset: int, idx: int):
         Illustrator = self.tables.illustrator
         datalist = self.session.query(Illustrator.illustrator).all()
-        return [_[0] for _ in list(set(datalist))]
+        datalist = [_[0] for _ in list(set(datalist))]
+        return pagenate(datalist, offset, idx)
 
-    def get_musician_list(self):
+    def get_musician_list(self, offset: int, idx: int):
         Musician = self.tables.musician
         datalist = self.session.query(Musician.musician).all()
-        return [_[0] for _ in list(set(datalist))]
+        datalist = [_[0] for _ in list(set(datalist))]
+        return pagenate(datalist, offset, idx)
 
-    def get_scenario_list(self):
+    def get_scenario_list(self, offset: int, idx: int):
         Scenario = self.tables.scenario
         datalist = self.session.query(Scenario.scenario).all()
-        return [_[0] for _ in list(set(datalist))]
+        datalist = [_[0] for _ in list(set(datalist))]
+        return pagenate(datalist, offset, idx)
 
-    def get_voice_list(self):
+    def get_voice_list(self, offset: int, idx: int):
         Voice = self.tables.voice
         datalist = self.session.query(Voice.voice).all()
-        return [_[0] for _ in list(set(datalist))]
+        datalist = [_[0] for _ in list(set(datalist))]
+        return pagenate(datalist, offset, idx)
 
-    def get_writer_list(self):
+    def get_writer_list(self, offset: int, idx: int):
         Writer = self.tables.writer
         datalist = self.session.query(Writer.writer).all()
-        return [_[0] for _ in list(set(datalist))]
+        datalist = [_[0] for _ in list(set(datalist))]
+        return pagenate(datalist, offset, idx)
 
     def idlist_to_data_list(self, idlist: List[str]):
         Work = self.tables.work

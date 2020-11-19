@@ -1,7 +1,7 @@
 from typing import Any, TypedDict, cast
 
 from db import DojinvoiceDB
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 
 # Blueprintのオブジェクトを生成する
 app = Blueprint('v1', __name__)
@@ -11,7 +11,7 @@ DB = DojinvoiceDB()
 class Params(TypedDict):
     offset: int
     random: bool
-    page: int
+    index: int
     keyword: str
     category: str
     max_rate: float
@@ -38,7 +38,7 @@ def get_params(args) -> Params:
     params = cast(Params, {})
     params['offset'] = args.get('offset', default=20, type=int)
     params['random'] = args.get('random', default=True, type=bool)
-    params['page'] = args.get('page', default=1, type=int)
+    params['index'] = args.get('index', default=0, type=int)
     params['keyword'] = args.get('keyword', default='', type=str)
     params['category'] = args.get('category', default='', type=str)
     params['filter_rate'] = args.get('filter_rate', default=False, type=bool)
@@ -67,44 +67,65 @@ def v1_index():
 
 @app.route('/v1/category')
 def category():
-    return res_ok(DB.get_category_list(), 200)
+    args = request.args
+    params = get_params(args)
+    return res_ok(DB.get_category_list(params['offset'], params['index']), 200)
 
 
 @app.route('/v1/rate')
 def rate():
-    return res_ok(DB.get_rate_filtered_list(1.0, 5.0), 200)
+    args = request.args
+    params = get_params(args)
+    return res_ok(
+        DB.get_rate_filtered_list(params['offset'], params['index']), 200)
 
 
 @app.route('/v1/chobit')
 def chobit():
-    return res_ok(DB.get_exist_chobit_list(), 200)
+    args = request.args
+    params = get_params(args)
+    return res_ok(
+        DB.get_exist_chobit_list(params['offset'], params['index']), 200)
 
 
 @app.route('/v1/illustrator')
 def illustrator():
-    return res_ok(DB.get_illustrator_list(), 200)
+    args = request.args
+    params = get_params(args)
+    return res_ok(
+        DB.get_illustrator_list(params['offset'], params['index']), 200)
 
 
 @app.route('/v1/musician')
 def musician():
-    return res_ok(DB.get_musician_list(), 200)
+    args = request.args
+    params = get_params(args)
+    return res_ok(DB.get_musician_list(params['offset'], params['index']), 200)
 
 
 @app.route('/v1/scenario')
 def scenario():
-    return res_ok(DB.get_scenario_list(), 200)
+    args = request.args
+    params = get_params(args)
+    return res_ok(DB.get_scenario_list(params['offset'], params['index']), 200)
 
 
 @app.route('/v1/voice')
 def voice():
-    return res_ok(DB.get_voice_list(), 200)
+    args = request.args
+    params = get_params(args)
+    return res_ok(DB.get_voice_list(params['offset'], params['index']), 200)
 
 
 @app.route('/v1/writer')
 def writer():
-    return res_ok(DB.get_writer_list(), 200)
+    args = request.args
+    params = get_params(args)
+    return res_ok(DB.get_writer_list(params['offset'], params['index']), 200)
 
 
 @app.route('/v1/genre')
 def genre():
-    return res_ok(DB.get_genre_list(), 200)
+    args = request.args
+    params = get_params(args)
+    return res_ok(DB.get_genre_list(params['offset'], params['index']), 200)
