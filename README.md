@@ -1,4 +1,4 @@
-# chobit-endless-api
+# dojinvoice-api
 
 [![Heroku](https://heroku-badge.herokuapp.com/?app=dojinvoice-api)](https://dojinvoice-api.herokuapp.com/)
 
