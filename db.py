@@ -95,6 +95,7 @@ class DojinvoiceDB(object):
         res = []
         for id_ in idlist:
             id_res = {}
+            id_res['id'] = id_
             id_res['work'] = resultproxy_to_dict(
                 self.engine.execute(
                     '''select *
