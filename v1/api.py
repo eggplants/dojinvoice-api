@@ -1,3 +1,4 @@
+from json import loads
 from typing import Any, TypedDict, cast
 
 from db import DojinvoiceDB
@@ -22,7 +23,6 @@ class Params(TypedDict):
     scenario: str
     voice: str
     writer: str
-    filter_rate: bool
 
 
 def res_ok(data: Any, status: int) -> Any:
@@ -41,7 +41,6 @@ def get_params(args) -> Params:
     params['index'] = args.get('index', default=0, type=int)
     params['keyword'] = args.get('keyword', default='', type=str)
     params['category'] = args.get('category', default='', type=str)
-    params['filter_rate'] = args.get('filter_rate', default=False, type=bool)
     params['max_rate'] = args.get('max_rate', default=5.0, type=float)
     params['min_rate'] = args.get('min_rate', default=0.0, type=float)
     params['genre'] = args.get('genre', default='', type=str)
@@ -129,3 +128,10 @@ def genre():
     args = request.args
     params = get_params(args)
     return res_ok(DB.get_genre_list(params['offset'], params['index']), 200)
+
+
+@app.route('/v1/idlist_to_data', methods=['POST'])
+def idlist_to_data():
+    args = request.form
+    params = args.get('idlist', '[]')
+    return res_ok(DB.idlist_to_data_list(loads(params)), 200)

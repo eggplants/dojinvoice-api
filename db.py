@@ -1,5 +1,6 @@
 from typing import Any, List, Optional, TypedDict, cast
 
+# from api import Params
 from sqlalchemy import create_engine
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
@@ -105,6 +106,15 @@ class DojinvoiceDB(object):
             join(Writer, Work.work_id == Writer.work_id).\
             all()
 
-    # def search(self, params):
-    #     # 集合を取りidのリストを返す
+    # def search(self, params: Params):
+    #     # keyword: str
+    #     # category: str
+    #     # max_rate: float
+    #     # min_rate: float
+    #     # genre: str
+    #     # illustrator: str
+    #     # musician: str
+    #     # scenario: str
+    #     # voice: str
+    #     # writer: str
     #     return res

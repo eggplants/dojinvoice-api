@@ -4,11 +4,14 @@ from os.path import join
 from typing import Any
 
 from flask import Flask, jsonify, send_from_directory
+from flask_cors import CORS
 
 from v1 import api
 
 app = Flask(__name__)
+app.config['CORS_HEADERS'] = 'Content-Type'
 app.register_blueprint(api.app)
+CORS(app)
 
 
 def res_ok(data: Any, status: int) -> Any:
