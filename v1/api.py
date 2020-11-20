@@ -1,4 +1,3 @@
-from json import loads
 from typing import Any, TypedDict, cast
 
 from db import DojinvoiceDB
@@ -130,8 +129,8 @@ def genre():
     return res_ok(DB.get_genre_list(params['offset'], params['index']), 200)
 
 
-@app.route('/v1/idlist_to_data', methods=['POST'])
+@app.route('/v1/ids_to_data', methods=['GET'])
 def idlist_to_data():
-    args = request.form
-    params = args.get('idlist', '[]')
-    return res_ok(DB.idlist_to_data_list(loads(params)), 200)
+    args = request.args
+    ids = args.get('ids', '')
+    return res_ok(DB.ids_to_data_list(ids), 200)

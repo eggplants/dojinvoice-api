@@ -1,3 +1,4 @@
+from re import match
 from typing import Any, List, Optional, TypedDict, cast
 
 # from api import Params
@@ -85,26 +86,48 @@ class DojinvoiceDB(object):
         datalist = [_[0] for _ in list(set(datalist))]
         return pagenate(datalist, offset, idx)
 
-    def idlist_to_data_list(self, idlist: List[str]):
-        Work = self.tables.work
-        Genre = self.tables.genre
-        Illustrator = self.tables.illustrator
-        Musician = self.tables.musician
-        Option = self.tables.option
-        Scenario = self.tables.scenario
-        Voice = self.tables.voice
-        Writer = self.tables.writer
-
-        return self.session.query(Work).\
-            filter(Work.work_id in idlist).\
-            join(Genre, Work.work_id == Genre.work_id).\
-            join(Genre, Work.work_id == Illustrator.work_id).\
-            join(Musician, Work.work_id == Musician.work_id).\
-            join(Option, Work.work_id == Option.work_id).\
-            join(Scenario, Work.work_id == Scenario.work_id).\
-            join(Voice, Work.work_id == Voice.work_id).\
-            join(Writer, Work.work_id == Writer.work_id).\
-            all()
+    def ids_to_data_list(self, ids: str):
+        def resultproxy_to_dict(sql_alchemy_rowset):
+            return [{Tuple[0]: Tuple[1] for Tuple in rowproxy.items()}
+                    for rowproxy in sql_alchemy_rowset]
+        idlist = [id_ for id_ in ids.split(',')
+                  if match('[a-zA-Z]{2}\d{,10}', id_)]
+        res = []
+        for id_ in idlist:
+            id_res = {}
+            id_res['work'] = resultproxy_to_dict(self.engine.execute(
+                '''select * 
+                from work where work_id == :idd''', idd=id_))[0]
+            id_res['genre'] = [
+                _['genre']
+                for _ in resultproxy_to_dict(self.engine.execute(
+                    '''select genre 
+                from genre where work_id == :idd''', idd=id_))]
+            id_res['illustrator'] = [
+                _['illustrator']
+                for _ in resultproxy_to_dict(
+                    self.engine.execute(
+                        '''select illustrator 
+                from illustrator where work_id == :idd''', idd=id_))]
+            id_res['musician'] = [
+                _['musician']
+                for _ in resultproxy_to_dict(self.engine.execute(
+                    '''select musician 
+                from musician where work_id == :idd''', idd=id_))]
+            id_res['option'] = resultproxy_to_dict(self.engine.execute(
+                '''select *
+                from option where work_id == : idd ''', idd=id_))[0]
+            id_res['scenario'] = resultproxy_to_dict(self.engine.execute(
+                '''select scenario
+                from scenario where work_id == : idd ''', idd=id_))
+            id_res['voice'] = resultproxy_to_dict(self.engine.execute(
+                '''select voice
+                from voice where work_id == : idd ''', idd=id_))
+            id_res['writer'] = resultproxy_to_dict(self.engine.execute(
+                '''select writer
+                from writer where work_id == : idd ''', idd=id_))
+            res.append(id_res)
+        return res
 
     # def search(self, params: Params):
     #     # keyword: str
