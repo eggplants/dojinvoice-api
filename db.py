@@ -91,41 +91,48 @@ class DojinvoiceDB(object):
             return [{Tuple[0]: Tuple[1] for Tuple in rowproxy.items()}
                     for rowproxy in sql_alchemy_rowset]
         idlist = [id_ for id_ in ids.split(',')
-                  if match('[a-zA-Z]{2}\d{,10}', id_)]
+                  if match(r'[a-zA-Z]{2}\d{,10}', id_)]
         res = []
         for id_ in idlist:
             id_res = {}
-            id_res['work'] = resultproxy_to_dict(self.engine.execute(
-                '''select * 
-                from work where work_id == :idd''', idd=id_))[0]
+            id_res['work'] = resultproxy_to_dict(
+                self.engine.execute(
+                    '''select *
+                    from work where work_id == :idd''', idd=id_))[0]
             id_res['genre'] = [
                 _['genre']
-                for _ in resultproxy_to_dict(self.engine.execute(
-                    '''select genre 
-                from genre where work_id == :idd''', idd=id_))]
+                for _ in resultproxy_to_dict(
+                    self.engine.execute(
+                        '''select genre
+                    from genre where work_id == :idd''', idd=id_))]
             id_res['illustrator'] = [
                 _['illustrator']
                 for _ in resultproxy_to_dict(
                     self.engine.execute(
-                        '''select illustrator 
-                from illustrator where work_id == :idd''', idd=id_))]
+                        '''select illustrator
+                    from illustrator where work_id == :idd''', idd=id_))]
             id_res['musician'] = [
                 _['musician']
-                for _ in resultproxy_to_dict(self.engine.execute(
-                    '''select musician 
-                from musician where work_id == :idd''', idd=id_))]
-            id_res['option'] = resultproxy_to_dict(self.engine.execute(
-                '''select *
-                from option where work_id == : idd ''', idd=id_))[0]
-            id_res['scenario'] = resultproxy_to_dict(self.engine.execute(
-                '''select scenario
-                from scenario where work_id == : idd ''', idd=id_))
-            id_res['voice'] = resultproxy_to_dict(self.engine.execute(
-                '''select voice
-                from voice where work_id == : idd ''', idd=id_))
-            id_res['writer'] = resultproxy_to_dict(self.engine.execute(
-                '''select writer
-                from writer where work_id == : idd ''', idd=id_))
+                for _ in resultproxy_to_dict(
+                    self.engine.execute(
+                        '''select musician
+                    from musician where work_id == :idd''', idd=id_))]
+            id_res['option'] = resultproxy_to_dict(
+                self.engine.execute(
+                    '''select *
+                from option where work_id == :idd''', idd=id_))[0]
+            id_res['scenario'] = resultproxy_to_dict(
+                self.engine.execute(
+                    '''select scenario
+                from scenario where work_id == :idd''', idd=id_))
+            id_res['voice'] = resultproxy_to_dict(
+                self.engine.execute(
+                    '''select voice
+                from voice where work_id == :idd''', idd=id_))
+            id_res['writer'] = resultproxy_to_dict(
+                self.engine.execute(
+                    '''select writer
+                from writer where work_id == :idd''', idd=id_))
             res.append(id_res)
         return res
 
