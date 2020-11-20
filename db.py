@@ -122,18 +122,24 @@ class DojinvoiceDB(object):
                 self.engine.execute(
                     '''select *
                 from option where work_id == :idd''', idd=id_))[0]
-            id_res['scenario'] = resultproxy_to_dict(
-                self.engine.execute(
-                    '''select scenario
-                from scenario where work_id == :idd''', idd=id_))
-            id_res['voice'] = resultproxy_to_dict(
-                self.engine.execute(
-                    '''select voice
-                from voice where work_id == :idd''', idd=id_))
-            id_res['writer'] = resultproxy_to_dict(
-                self.engine.execute(
-                    '''select writer
-                from writer where work_id == :idd''', idd=id_))
+            id_res['scenario'] = [
+                _['scenario']
+                for _ in resultproxy_to_dict(
+                    self.engine.execute(
+                        '''select scenario
+                from scenario where work_id == :idd''', idd=id_))]
+            id_res['voice'] = [
+                _['voice']
+                for _ in resultproxy_to_dict(
+                    self.engine.execute(
+                        '''select voice
+                from voice where work_id == :idd''', idd=id_))]
+            id_res['writer'] = [
+                _['writer']
+                for _ in resultproxy_to_dict(
+                    self.engine.execute(
+                        '''select writer
+                from writer where work_id == :idd''', idd=id_))]
             res.append(id_res)
         return res
 
